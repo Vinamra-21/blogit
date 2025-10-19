@@ -2,55 +2,77 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { trpc } from "@/lib/client"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default function Home() {
+export default function CategoryPage() {
+  const params = useParams()
+  const slug = params.slug as string
+  const [category, setCategory] = useState<any>(null)
   const [posts, setPosts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchData = async () => {
       try {
-        const data = await trpc.posts.getAll.query()
-        setPosts(data)
+        const [categoryData, postsData] = await Promise.all([
+          trpc.categories.getBySlug.query(slug),
+          trpc.posts.getByCategory.query(slug),
+        ])
+        setCategory(categoryData)
+        setPosts(postsData)
       } catch (error) {
-        console.error("Failed to fetch posts:", error)
+        console.error("Failed to fetch category:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchPosts()
-  }, [])
+    if (slug) {
+      fetchData()
+    }
+  }, [slug])
 
-  return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12">
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">Blog</h1>
-          <p className="text-lg text-muted-foreground">Explore our latest articles and insights</p>
-        </div>
-
-        {loading ? (
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-12">
+          <Skeleton className="h-10 w-1/3 mb-4" />
+          <Skeleton className="h-4 w-2/3 mb-8" />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
               <Card key={i}>
                 <CardHeader>
                   <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-full" />
                 </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-4 w-full mb-2" />
-                  <Skeleton className="h-4 w-2/3" />
-                </CardContent>
               </Card>
             ))}
           </div>
-        ) : posts.length === 0 ? (
+        </div>
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-12">
+        <Link href="/">
+          <Button variant="ghost" className="mb-6">
+            ← Back to Blog
+          </Button>
+        </Link>
+
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold mb-2">{category?.name}</h1>
+          {category?.description && <p className="text-lg text-muted-foreground">{category.description}</p>}
+        </div>
+
+        {posts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">No posts yet. Check back soon!</p>
+            <p className="text-muted-foreground">No posts in this category yet.</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -65,18 +87,6 @@ export default function Home() {
                     <p className="text-sm text-muted-foreground line-clamp-3">
                       {post.excerpt || post.content.substring(0, 150)}
                     </p>
-                    {post.categories && post.categories.length > 0 && (
-                      <div className="flex gap-2 mt-4 flex-wrap">
-                        {post.categories.slice(0, 2).map((cat: any) => (
-                          <span
-                            key={cat.id}
-                            className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded"
-                          >
-                            {cat.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
               </Link>
