@@ -1,6 +1,6 @@
-# Blog It : a quick and easy to use blogging platform
+# BlogIt - Share Your Stories
 
-A modern, full-stack multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
+A modern, elegant, full-stack multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
 
 ## Features
 
@@ -43,7 +43,7 @@ pnpm install
 
 2. Set up your environment variables in the Vercel project settings:
 
-   - \`NEON_NEON_NEON_DATABASE_URL\` - Your Neon PostgreSQL connection string
+   - \`NEON_DATABASE_URL\` - Your Neon PostgreSQL connection string
    - \`JWT_SECRET\` - Secret key for JWT token signing (generate a random string)
 
 3. Run the database setup script to create tables and seed sample data:
@@ -246,7 +246,7 @@ npm start
 
 Make sure to set these environment variables in your Vercel project:
 
-- \`NEON_NEON_DATABASE_URL\` - PostgreSQL connection string from Neon
+- \`NEON_DATABASE_URL\` - PostgreSQL connection string from Neon
 - \`JWT_SECRET\` - Secret key for JWT signing (generate a random string for production)
 
 ## Future Enhancements

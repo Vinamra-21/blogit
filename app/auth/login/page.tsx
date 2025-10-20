@@ -1,69 +1,88 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { LogIn } from "lucide-react";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Login failed")
-        return
+        setError(data.error || "Login failed");
+        return;
       }
 
-      router.push("/dashboard")
+      router.push("/dashboard");
     } catch (err) {
-      setError("An error occurred. Please try again.")
-      console.error(err)
+      setError("An error occurred. Please try again.");
+      console.error(err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>Enter your credentials to access your blog</CardDescription>
+    <main className="min-h-screen gradient-bg flex items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md shadow-2xl dark:shadow-[#00ff9d]/20 border dark:border-white/10 neon-border">
+        <div className="h-2 bg-black dark:bg-gradient-to-r dark:from-[#00ff9d] dark:to-[#00ccff] rounded-t-xl" />
+        <CardHeader className="text-center pb-4">
+          <div className="mx-auto w-14 h-14 bg-black dark:bg-[#00ff9d] rounded-xl flex items-center justify-center mb-4 dark:neon-glow-strong">
+            <LogIn className="w-7 h-7 text-white dark:text-black" />
+          </div>
+          <CardTitle className="text-2xl dark:text-white">
+            Welcome Back
+          </CardTitle>
+          <CardDescription>Sign in to continue to BlogIt</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">{error}</div>}
+            {error && (
+              <div className="bg-red-50 dark:bg-[#ff0066]/10 border border-red-200 dark:border-[#ff0066]/30 text-red-700 dark:text-[#ff0066] p-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium dark:text-white">
+                Email
+              </label>
               <Input
                 type="email"
                 name="email"
@@ -71,11 +90,14 @@ export default function LoginPage() {
                 onChange={handleChange}
                 placeholder="your@email.com"
                 required
+                className="h-11 dark:bg-black dark:border-white/20 dark:focus:border-[#00ff9d] transition-colors"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">Password</label>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium dark:text-white">
+                Password
+              </label>
               <Input
                 type="password"
                 name="password"
@@ -83,22 +105,30 @@ export default function LoginPage() {
                 onChange={handleChange}
                 placeholder="Your password"
                 required
+                className="h-11 dark:bg-black dark:border-white/20 dark:focus:border-[#00ff9d] transition-colors"
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full h-11 bg-black hover:bg-black/80 dark:bg-[#00ff9d] dark:hover:bg-[#00ff9d]/90 text-white dark:text-black text-base font-medium neon-button dark:neon-glow transition-all"
+              disabled={loading}>
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Don't have an account?{" "}
-            <Link href="/auth/register" className="text-primary hover:underline">
-              Sign up
-            </Link>
-          </p>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              Don't have an account?{" "}
+              <Link
+                href="/auth/register"
+                className="text-black dark:text-[#00ff9d] hover:underline font-medium">
+                Sign up
+              </Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </main>
-  )
+  );
 }
