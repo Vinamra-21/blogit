@@ -1,17 +1,17 @@
-import { neon } from "@neondatabase/serverless"
-import { drizzle } from "drizzle-orm/neon-http"
-import * as schema from "../lib/db/schema"
-import { hashPassword } from "../lib/auth/crypto"
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+import * as schema from "../lib/schema";
+import { hashPassword } from "../lib/crypto";
 
 async function setupDatabase() {
-  console.log("[v0] Starting database setup...")
+  console.log("Starting database setup...");
 
-  const sql = neon(process.env.NEON_NEON_DATABASE_URL!)
-  const db = drizzle(sql, { schema })
+  const sql = neon(process.env.NEON_DATABASE_URL!);
+  const db = drizzle(sql, { schema });
 
   try {
     // Create tables
-    console.log("[v0] Creating tables...")
+    console.log("Creating tables...");
 
     // Users table
     await sql`
@@ -23,7 +23,7 @@ async function setupDatabase() {
         created_at TIMESTAMP DEFAULT NOW() NOT NULL,
         updated_at TIMESTAMP DEFAULT NOW() NOT NULL
       )
-    `
+    `;
 
     // Categories table
     await sql`
@@ -34,7 +34,7 @@ async function setupDatabase() {
         description TEXT,
         created_at TIMESTAMP DEFAULT NOW() NOT NULL
       )
-    `
+    `;
 
     // Posts table
     await sql`
@@ -49,7 +49,7 @@ async function setupDatabase() {
         created_at TIMESTAMP DEFAULT NOW() NOT NULL,
         updated_at TIMESTAMP DEFAULT NOW() NOT NULL
       )
-    `
+    `;
 
     // Post-Category junction table
     await sql`
@@ -58,15 +58,15 @@ async function setupDatabase() {
         category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
         PRIMARY KEY (post_id, category_id)
       )
-    `
+    `;
 
-    console.log("[v0] Tables created successfully!")
+    console.log("Tables created successfully!");
 
     // Seed sample data
-    console.log("[v0] Seeding sample data...")
+    console.log("Seeding sample data...");
 
-    const demoPassword = await hashPassword("demo123456")
-    const testPassword = await hashPassword("test123456")
+    const demoPassword = await hashPassword("demo123456");
+    const testPassword = await hashPassword("test123456");
 
     await sql`
       INSERT INTO users (id, email, name, password) 
@@ -74,7 +74,7 @@ async function setupDatabase() {
         ('user-1', 'demo@example.com', 'Demo User', ${demoPassword}),
         ('user-2', 'test@example.com', 'Test User', ${testPassword})
       ON CONFLICT (email) DO NOTHING
-    `
+    `;
 
     // Create sample categories
     await sql`
@@ -84,7 +84,7 @@ async function setupDatabase() {
         ('Design', 'design', 'Posts about design and UX'),
         ('Business', 'business', 'Posts about business and entrepreneurship')
       ON CONFLICT (slug) DO NOTHING
-    `
+    `;
 
     // Create sample posts
     await sql`
@@ -107,7 +107,7 @@ async function setupDatabase() {
           true
         )
       ON CONFLICT (slug) DO NOTHING
-    `
+    `;
 
     // Link posts to categories
     await sql`
@@ -115,23 +115,23 @@ async function setupDatabase() {
       SELECT p.id, c.id FROM posts p, categories c
       WHERE p.slug = 'getting-started-nextjs' AND c.slug = 'technology'
       ON CONFLICT DO NOTHING
-    `
+    `;
 
     await sql`
       INSERT INTO post_categories (post_id, category_id)
       SELECT p.id, c.id FROM posts p, categories c
       WHERE p.slug = 'future-web-design' AND c.slug = 'design'
       ON CONFLICT DO NOTHING
-    `
+    `;
 
-    console.log("[v0] Database setup completed successfully!")
-    console.log("[v0] Demo credentials:")
-    console.log("[v0]   Email: demo@example.com, Password: demo123456")
-    console.log("[v0]   Email: test@example.com, Password: test123456")
+    console.log("Database setup completed successfully!");
+    console.log("Demo credentials:");
+    console.log("  Email: demo@example.com, Password: demo123456");
+    console.log("  Email: test@example.com, Password: test123456");
   } catch (error) {
-    console.error("[v0] Database setup failed:", error)
-    throw error
+    console.error("Database setup failed:", error);
+    throw error;
   }
 }
 
-setupDatabase()
+setupDatabase();

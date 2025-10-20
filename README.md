@@ -1,4 +1,4 @@
-# Blog Platform
+# Blog It : a quick and easy to use blogging platform
 
 A modern, full-stack multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
 
@@ -33,31 +33,35 @@ A modern, full-stack multi-user blogging platform built with Next.js 15, TypeScr
 ### Installation
 
 1. Clone the repository and install dependencies:
-\`\`\`bash
-npm install
+   \`\`\`bash
+   npm install
+
 # or
+
 pnpm install
 \`\`\`
 
 2. Set up your environment variables in the Vercel project settings:
+
    - \`NEON_NEON_NEON_DATABASE_URL\` - Your Neon PostgreSQL connection string
    - \`JWT_SECRET\` - Secret key for JWT token signing (generate a random string)
 
 3. Run the database setup script to create tables and seed sample data:
-\`\`\`bash
-npm run setup-db
-\`\`\`
+   \`\`\`bash
+   npm run setup-db
+   \`\`\`
 
 4. Start the development server:
-\`\`\`bash
-npm run dev
-\`\`\`
+   \`\`\`bash
+   npm run dev
+   \`\`\`
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Demo Credentials
 
 After running the setup script, you can log in with:
+
 - **Email**: demo@example.com, **Password**: demo123456
 - **Email**: test@example.com, **Password**: test123456
 
@@ -65,70 +69,70 @@ After running the setup script, you can log in with:
 
 \`\`\`
 ├── app/
-│   ├── layout.tsx              # Root layout with navbar
-│   ├── page.tsx                # Home page - displays all posts
-│   ├── auth/
-│   │   ├── login/
-│   │   │   └── page.tsx        # Login page
-│   │   └── register/
-│   │       └── page.tsx        # Registration page
-│   ├── api/auth/
-│   │   ├── login/
-│   │   │   └── route.ts        # Login endpoint
-│   │   ├── register/
-│   │   │   └── route.ts        # Registration endpoint
-│   │   ├── logout/
-│   │   │   └── route.ts        # Logout endpoint
-│   │   └── me/
-│   │       └── route.ts        # Get current user endpoint
-│   ├── posts/
-│   │   └── [slug]/
-│   │       └── page.tsx        # Individual post page
-│   ├── categories/
-│   │   └── [slug]/
-│   │       └── page.tsx        # Category posts page
-│   └── dashboard/
-│       ├── layout.tsx          # Dashboard layout (protected)
-│       ├── page.tsx            # Dashboard overview
-│       ├── posts/
-│       │   ├── page.tsx        # Posts management
-│       │   ├── new/
-│       │   │   └── page.tsx    # Create new post
-│       │   └── [id]/edit/
-│       │       └── page.tsx    # Edit post
-│       └── categories/
-│           ├── page.tsx        # Categories management
-│           ├── new/
-│           │   └── page.tsx    # Create new category
-│           └── [id]/edit/
-│               └── page.tsx    # Edit category
+│ ├── layout.tsx # Root layout with navbar
+│ ├── page.tsx # Home page - displays all posts
+│ ├── auth/
+│ │ ├── login/
+│ │ │ └── page.tsx # Login page
+│ │ └── register/
+│ │ └── page.tsx # Registration page
+│ ├── api/auth/
+│ │ ├── login/
+│ │ │ └── route.ts # Login endpoint
+│ │ ├── register/
+│ │ │ └── route.ts # Registration endpoint
+│ │ ├── logout/
+│ │ │ └── route.ts # Logout endpoint
+│ │ └── me/
+│ │ └── route.ts # Get current user endpoint
+│ ├── posts/
+│ │ └── [slug]/
+│ │ └── page.tsx # Individual post page
+│ ├── categories/
+│ │ └── [slug]/
+│ │ └── page.tsx # Category posts page
+│ └── dashboard/
+│ ├── layout.tsx # Dashboard layout (protected)
+│ ├── page.tsx # Dashboard overview
+│ ├── posts/
+│ │ ├── page.tsx # Posts management
+│ │ ├── new/
+│ │ │ └── page.tsx # Create new post
+│ │ └── [id]/edit/
+│ │ └── page.tsx # Edit post
+│ └── categories/
+│ ├── page.tsx # Categories management
+│ ├── new/
+│ │ └── page.tsx # Create new category
+│ └── [id]/edit/
+│ └── page.tsx # Edit category
 ├── components/
-│   ├── navbar.tsx              # Navigation bar with auth UI
-│   ├── post-card.tsx           # Post card component
-│   ├── post-form.tsx           # Post creation/edit form
-│   ├── markdown-editor.tsx     # Markdown editor with preview
-│   └── ui/                     # shadcn/ui components
+│ ├── navbar.tsx # Navigation bar with auth UI
+│ ├── post-card.tsx # Post card component
+│ ├── post-form.tsx # Post creation/edit form
+│ ├── markdown-editor.tsx # Markdown editor with preview
+│ └── ui/ # shadcn/ui components
 ├── lib/
-│   ├── auth/
-│   │   ├── crypto.ts           # Password hashing and verification
-│   │   └── session.ts          # JWT token management
-│   ├── db/
-│   │   ├── schema.ts           # Drizzle ORM schema
-│   │   └── client.ts           # Database client
-│   ├── trpc/
-│   │   ├── init.ts             # tRPC initialization with auth context
-│   │   ├── root.ts             # Root router
-│   │   ├── client.ts           # tRPC client
-│   │   └── routers/
-│   │       ├── posts.ts        # Posts router (with auth)
-│   │       └── categories.ts   # Categories router (with auth)
-│   └── hooks/
-│       ├── use-posts.ts        # Posts hook
-│       └── use-categories.ts   # Categories hook
+│ ├── auth/
+│ │ ├── crypto.ts # Password hashing and verification
+│ │ └── session.ts # JWT token management
+│ ├── db/
+│ │ ├── schema.ts # Drizzle ORM schema
+│ │ └── client.ts # Database client
+│ ├── trpc/
+│ │ ├── init.ts # tRPC initialization with auth context
+│ │ ├── root.ts # Root router
+│ │ ├── client.ts # tRPC client
+│ │ └── routers/
+│ │ ├── posts.ts # Posts router (with auth)
+│ │ └── categories.ts # Categories router (with auth)
+│ └── hooks/
+│ ├── use-posts.ts # Posts hook
+│ └── use-categories.ts # Categories hook
 ├── scripts/
-│   └── setup-db.ts             # Database setup script
-├── middleware.ts               # Route protection middleware
-└── drizzle.config.ts           # Drizzle configuration
+│ └── setup-db.ts # Database setup script
+├── middleware.ts # Route protection middleware
+└── drizzle.config.ts # Drizzle configuration
 \`\`\`
 
 ## Authentication
@@ -145,6 +149,7 @@ After running the setup script, you can log in with:
 ### Protected Routes
 
 The following routes require authentication:
+
 - `/dashboard` - Dashboard overview
 - `/dashboard/posts` - Posts management
 - `/dashboard/posts/new` - Create new post
@@ -158,6 +163,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 ### API Routes
 
 #### Authentication
+
 - `POST /api/auth/register` - Register a new user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
@@ -166,6 +172,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 ## API Routes
 
 ### Posts
+
 - `posts.getAll()` - Get all published posts (public)
 - `posts.getBySlug(slug)` - Get a specific post by slug (public)
 - `posts.getByCategory(slug)` - Get posts in a category (public)
@@ -176,6 +183,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 - `posts.publish(id)` - Publish a post (protected, owner only)
 
 ### Categories
+
 - `categories.getAll()` - Get all categories (public)
 - `categories.getBySlug(slug)` - Get a specific category (public)
 - `categories.create(data)` - Create a new category (protected)
@@ -185,6 +193,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 ## Database Schema
 
 ### Users
+
 - `id` (TEXT, PRIMARY KEY)
 - `email` (VARCHAR, UNIQUE)
 - `name` (VARCHAR)
@@ -193,6 +202,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 - `updated_at` (TIMESTAMP)
 
 ### Posts
+
 - `id` (SERIAL, PRIMARY KEY)
 - `title` (VARCHAR)
 - `slug` (VARCHAR, UNIQUE)
@@ -204,6 +214,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 - `updated_at` (TIMESTAMP)
 
 ### Categories
+
 - `id` (SERIAL, PRIMARY KEY)
 - `name` (VARCHAR, UNIQUE)
 - `slug` (VARCHAR, UNIQUE)
@@ -211,6 +222,7 @@ Unauthenticated users are automatically redirected to `/auth/login`.
 - `created_at` (TIMESTAMP)
 
 ### Post Categories (Junction Table)
+
 - `post_id` (INTEGER, FOREIGN KEY → posts.id)
 - `category_id` (INTEGER, FOREIGN KEY → categories.id)
 
