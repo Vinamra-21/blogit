@@ -46,47 +46,47 @@
 :root {
   --radius: 0.5rem;
 
-  /* Light mode - Clean white with elegant black/gray accents */
+  /* Light mode - White with lively green accents */
   --background: 255 255 255;
   --foreground: 0 0 0;
   --card: 255 255 255;
   --card-foreground: 0 0 0;
   --popover: 255 255 255;
   --popover-foreground: 0 0 0;
-  --primary: 0 0 0;
+  --primary: 16 185 129;
   --primary-foreground: 255 255 255;
-  --secondary: 245 245 245;
+  --secondary: 240 253 244;
   --secondary-foreground: 0 0 0;
-  --muted: 250 250 250;
-  --muted-foreground: 115 115 115;
-  --accent: 245 245 245;
+  --muted: 249 250 251;
+  --muted-foreground: 107 114 128;
+  --accent: 236 253 245;
   --accent-foreground: 0 0 0;
   --destructive: 239 68 68;
   --destructive-foreground: 255 255 255;
-  --border: 229 229 229;
-  --input: 229 229 229;
-  --ring: 0 0 0;
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: 16 185 129;
 
-  /* Chart colors - elegant grayscale with subtle colors */
-  --chart-1: 0 0 0;
-  --chart-2: 82 82 82;
-  --chart-3: 163 163 163;
-  --chart-4: 212 212 212;
-  --chart-5: 115 115 115;
+  /* Chart colors - lively greens and complementary colors */
+  --chart-1: 16 185 129;
+  --chart-2: 52 211 153;
+  --chart-3: 34 197 94;
+  --chart-4: 59 130 246;
+  --chart-5: 168 85 247;
 
   /* Sidebar */
   --sidebar: 255 255 255;
   --sidebar-foreground: 0 0 0;
-  --sidebar-primary: 0 0 0;
+  --sidebar-primary: 16 185 129;
   --sidebar-primary-foreground: 255 255 255;
-  --sidebar-accent: 245 245 245;
+  --sidebar-accent: 240 253 244;
   --sidebar-accent-foreground: 0 0 0;
-  --sidebar-border: 229 229 229;
-  --sidebar-ring: 0 0 0;
+  --sidebar-border: 229 231 235;
+  --sidebar-ring: 16 185 129;
 }
 
 .dark {
-  /* Dark mode - Deep black with vibrant neon accents */
+  /* Dark mode - Deep black with neon green accents, WHITE TEXT */
   --background: 0 0 0;
   --foreground: 255 255 255;
   --card: 10 10 10;
@@ -98,7 +98,7 @@
   --secondary: 20 20 20;
   --secondary-foreground: 255 255 255;
   --muted: 20 20 20;
-  --muted-foreground: 163 163 163;
+  --muted-foreground: 212 212 212;
   --accent: 30 30 30;
   --accent-foreground: 0 255 157;
   --destructive: 255 0 102;
@@ -171,7 +171,7 @@
   background: linear-gradient(
     135deg,
     rgb(250 250 250) 0%,
-    rgb(245 245 245) 100%
+    rgb(240 253 244) 100%
   );
 }
 
@@ -202,7 +202,7 @@
 
 /* Hero gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, rgb(0 0 0) 0%, rgb(82 82 82) 100%);
+  background: linear-gradient(135deg, rgb(16 185 129) 0%, rgb(52 211 153) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -232,7 +232,7 @@
   border: 1px solid rgb(0 255 157 / 0.3);
 }
 
-.dark .neon-border::before {
+.dark .neon-border:hover::before {
   content: "";
   position: absolute;
   inset: -1px;
@@ -243,22 +243,18 @@
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.dark .neon-border:hover::before {
   opacity: 1;
   animation: neon-pulse 2s ease-in-out infinite;
 }
 
 /* Button hover effects */
-.neon-button {
+.btn-hover {
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.dark .neon-button::after {
+.btn-hover::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -266,12 +262,57 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgb(0 255 157 / 0.3);
+  background: rgba(255, 255, 255, 0.1);
   transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  transition: width 0.6s ease, height 0.6s ease;
 }
 
-.dark .neon-button:hover::after {
+.btn-hover:hover::before {
   width: 300px;
   height: 300px;
+}
+
+.btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.dark .btn-hover:hover {
+  box-shadow: 0 10px 25px rgb(0 255 157 / 0.3);
+}
+
+/* Light mode green hover effects */
+.btn-hover-light:hover {
+  background: rgb(5 150 105);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+/* Pulsing effect for publish button */
+@keyframes pulse-green {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+}
+
+.dark @keyframes pulse-neon {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 255, 157, 0);
+  }
+}
+
+button:hover:not(:disabled) {
+  animation: pulse-green 2s infinite;
+}
+
+.dark button:hover:not(:disabled) {
+  animation: pulse-neon 2s infinite;
 }

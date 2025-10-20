@@ -1,41 +1,42 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useParams, useRouter } from "next/navigation"
-import { trpc } from "@/lib/client"
-import { PostForm } from "@/components/post-form"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { trpc } from "@/lib/client";
+import { PostForm } from "@/components/post-form";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export default function EditPostPage() {
-  const params = useParams()
-  const router = useRouter()
-  const postId = Number.parseInt(params.id as string)
-  const [post, setPost] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const params = useParams();
+  const router = useRouter();
+  const postId = Number.parseInt(params.id as string);
+  const [post, setPost] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const allPosts = await trpc.posts.getByAuthor.query()
-        const foundPost = allPosts.find((p) => p.id === postId)
-        setPost(foundPost)
+        const allPosts = await trpc.posts.getByAuthor.query();
+        const foundPost = allPosts.find((p) => p.id === postId);
+        setPost(foundPost);
       } catch (error: any) {
-        console.error("Failed to fetch post:", error)
+        console.error("Failed to fetch post:", error);
         if (error.message?.includes("UNAUTHORIZED")) {
-          router.push("/auth/login")
+          router.push("/auth/login");
         } else {
-          setError("Failed to load post")
+          setError("Failed to load post");
         }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     if (postId) {
-      fetchPost()
+      fetchPost();
     }
-  }, [postId, router])
+  }, [postId, router]);
 
   if (loading) {
     return (
@@ -45,7 +46,7 @@ export default function EditPostPage() {
           <Skeleton className="h-96 w-full" />
         </div>
       </main>
-    )
+    );
   }
 
   if (error) {
@@ -55,7 +56,7 @@ export default function EditPostPage() {
           <div className="bg-red-50 text-red-700 p-4 rounded-md">{error}</div>
         </div>
       </main>
-    )
+    );
   }
 
   if (!post) {
@@ -65,14 +66,25 @@ export default function EditPostPage() {
           <h1 className="text-3xl font-bold">Post not found</h1>
         </div>
       </main>
-    )
+    );
   }
 
   return (
-    <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-3xl">
+    <main className="min-h-screen bg-white dark:bg-black">
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        <div className="mb-6">
+          <Link
+            href="/dashboard"
+            className="inline-block hover:opacity-80 transition-opacity">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 cursor-pointer">
+              Edit Post
+            </h1>
+          </Link>
+          <p className="text-gray-600 dark:text-gray-300">Update your post</p>
+        </div>
+
         <PostForm postId={postId} initialData={post} />
       </div>
     </main>
-  )
+  );
 }

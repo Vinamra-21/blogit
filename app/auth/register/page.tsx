@@ -71,28 +71,32 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 via-background to-blue-50 dark:from-purple-950/20 dark:via-background dark:to-blue-950/20 flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md shadow-xl">
-        <div className="h-2 bg-gradient-to-r from-purple-600 to-blue-600 rounded-t-xl" />
+    <main className="min-h-screen gradient-bg flex items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md shadow-2xl dark:shadow-[#00ff9d]/20 border border-gray-200 dark:border-white/10 dark:neon-border bg-white dark:bg-black">
+        <div className="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-[#00ff9d] dark:to-[#00ccff] rounded-t-xl" />
         <CardHeader className="text-center pb-4">
-          <div className="mx-auto w-14 h-14 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center mb-4">
-            <UserPlus className="w-7 h-7 text-white" />
+          <div className="mx-auto w-14 h-14 bg-emerald-600 dark:bg-[#00ff9d] rounded-xl flex items-center justify-center mb-4 dark:neon-glow-strong">
+            <UserPlus className="w-7 h-7 text-white dark:text-black" />
           </div>
-          <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl text-gray-900 dark:text-white">
+            Create Account
+          </CardTitle>
+          <CardDescription className="text-gray-600 dark:text-gray-300">
             Join BlogIt and start sharing your stories
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 p-3 rounded-lg text-sm">
+              <div className="bg-red-50 dark:bg-[#ff0066]/10 border border-red-200 dark:border-[#ff0066]/30 text-red-700 dark:text-[#ff0066] p-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium">Name</label>
+              <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                Name
+              </label>
               <Input
                 type="text"
                 name="name"
@@ -100,12 +104,14 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="Your name"
                 required
-                className="h-11"
+                className="h-11 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:focus:border-[#00ff9d] transition-colors"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium">Email</label>
+              <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                Email
+              </label>
               <Input
                 type="email"
                 name="email"
@@ -113,12 +119,14 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="your@email.com"
                 required
-                className="h-11"
+                className="h-11 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:focus:border-[#00ff9d] transition-colors"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium">Password</label>
+              <label className="block text-sm font-medium text-gray-900 dark:text-white">
+                Password
+              </label>
               <Input
                 type="password"
                 name="password"
@@ -126,12 +134,12 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="At least 8 characters"
                 required
-                className="h-11"
+                className="h-11 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:focus:border-[#00ff9d] transition-colors"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium">
+              <label className="block text-sm font-medium text-gray-900 dark:text-white">
                 Confirm Password
               </label>
               <Input
@@ -141,24 +149,24 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="Confirm your password"
                 required
-                className="h-11"
+                className="h-11 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:focus:border-[#00ff9d] transition-colors"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full h-11 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-base font-medium"
+              className="w-full h-11 bg-emerald-600 hover:bg-emerald-700 dark:bg-[#00ff9d] dark:hover:bg-[#00e68a] text-white dark:text-black text-base font-medium btn-hover dark:neon-glow transition-all"
               disabled={loading}>
               {loading ? "Creating account..." : "Sign Up"}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="text-purple-600 hover:text-purple-700 font-medium hover:underline">
+                className="text-emerald-600 dark:text-[#00ff9d] hover:text-emerald-700 dark:hover:text-[#00e68a] font-medium hover:underline">
                 Sign in
               </Link>
             </p>

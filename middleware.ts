@@ -1,34 +1,42 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { jwtVerify } from "jose"
-
-const secret = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-key-change-in-production")
-
-// Routes that require authentication
-const protectedRoutes = ["/dashboard", "/dashboard/posts", "/dashboard/categories"]
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { verifySession } from "./lib/session";
 
 export async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname
+  const { pathname } = request.nextUrl;
 
-  // Check if route requires authentication
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
+  // Protected routes that require authentication
+  const protectedRoutes = ["/dashboard"];
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   if (isProtectedRoute) {
-    const token = request.cookies.get("auth-token")?.value
+    const token = request.cookies.get("auth-token")?.value;
 
     if (!token) {
-      return NextResponse.redirect(new URL("/auth/login", request.url))
+      const loginUrl = new URL("/auth/login", request.url);
+      loginUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(loginUrl);
     }
 
     try {
-      await jwtVerify(token, secret)
+      const payload = await verifySession(token);
+      if (!payload) {
+        const loginUrl = new URL("/auth/login", request.url);
+        loginUrl.searchParams.set("from", pathname);
+        return NextResponse.redirect(loginUrl);
+      }
     } catch (error) {
-      return NextResponse.redirect(new URL("/auth/login", request.url))
+      const loginUrl = new URL("/auth/login", request.url);
+      loginUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-}
+  matcher: ["/dashboard/:path*"],
+};

@@ -240,6 +240,37 @@ export const postsRouter = router({
       return updated[0];
     }),
 
+  unpublish: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ input, ctx }) => {
+      const db = getDb();
+
+      // Check if user owns the post
+      const post = await db
+        .select()
+        .from(posts)
+        .where(eq(posts.id, input))
+        .limit(1);
+
+      if (!post.length) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      if (post[0].authorId !== ctx.session.userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only unpublish your own posts",
+        });
+      }
+
+      const updated = await db
+        .update(posts)
+        .set({ published: false })
+        .where(eq(posts.id, input))
+        .returning();
+      return updated[0];
+    }),
+
   getByAuthor: protectedProcedure.query(async ({ ctx }) => {
     const db = getDb();
     const authorPosts = await db

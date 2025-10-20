@@ -11,9 +11,9 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "BlogIt - Share Your Stories",
+  authors: [{ name: "Vinamra Garg" }],
   description:
     "A modern, elegant blogging platform where writers connect and share their stories with the world",
-  generator: "v0.app",
 };
 
 export default function RootLayout({
