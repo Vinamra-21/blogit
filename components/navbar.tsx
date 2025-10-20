@@ -109,13 +109,6 @@ export function Navbar() {
                         <DropdownMenuContent
                           align="end"
                           className="w-48 bg-white dark:bg-black dark:border-white/10">
-                          <DropdownMenuItem asChild>
-                            <Link
-                              href="/dashboard"
-                              className="cursor-pointer text-gray-700 hover:text-emerald-600 dark:text-white dark:hover:text-[#00ff9d]">
-                              Dashboard
-                            </Link>
-                          </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={handleLogout}
                             className="cursor-pointer text-red-600 hover:text-red-700 dark:text-[#ff0066] dark:hover:text-[#ff3385]">

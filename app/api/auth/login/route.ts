@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  email: z.email("Invalid email"),
+  email: z.string().email("Invalid email"),
   password: z.string().min(1, "Password is required"),
 });
 

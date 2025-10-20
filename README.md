@@ -1,253 +1,305 @@
-# BlogIt - Share Your Stories
+# BlogIt - Modern Blogging Platform
 
-A modern, elegant, full-stack multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
+A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
 
-## Features
+**Live Demo**: [https://your-app.vercel.app](https://your-app.vercel.app) _(Deploy to get link)_
 
-- **User authentication** - Secure registration and login with password encryption
-- **Multi-user blogging** - Create, edit, and publish blog posts
-- **Post ownership** - Users can only edit and delete their own posts
-- **Category management** - Organize posts with categories
-- **Markdown support** - Write posts in Markdown with live preview
-- **Dashboard** - Manage all your posts and categories from a centralized dashboard
-- **Type-safe API** - Full end-to-end type safety with tRPC
-- **Responsive design** - Beautiful UI built with Tailwind CSS and shadcn/ui
+**Repository**: [https://github.com/yourusername/blogit](https://github.com/yourusername/blogit)
 
-## Tech Stack
+---
 
-- **Frontend**: Next.js 15 (App Router), React 19, TypeScript
-- **Backend**: tRPC, Node.js
-- **Database**: PostgreSQL (Neon), Drizzle ORM
-- **Authentication**: JWT tokens, PBKDF2 password hashing
-- **Styling**: Tailwind CSS, shadcn/ui
-- **Validation**: Zod
-- **Markdown**: react-markdown
+## 📋 Table of Contents
 
-## Getting Started
+- [Tech Stack](#tech-stack)
+- [Features Implemented](#features-implemented)
+- [Setup Instructions](#setup-instructions)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
+- [tRPC Router Structure](#trpc-router-structure)
+- [Trade-offs & Decisions](#trade-offs--decisions)
+- [Time Spent](#time-spent)
+
+---
+
+## 🚀 Tech Stack
+
+### Frontend
+
+- **Next.js 15** - React framework with App Router
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first styling
+- **shadcn/ui** - Component library
+- **Tiptap** - Rich text editor
+- **ReactMarkdown** - Markdown rendering
+
+### Backend
+
+- **tRPC** - End-to-end type-safe API
+- **Drizzle ORM** - Type-safe database queries
+- **PostgreSQL (Neon)** - Database
+- **Zod** - Schema validation
+
+### Authentication
+
+- **JWT** - Token-based authentication
+- **PBKDF2** - Password hashing with salt
+
+### Deployment
+
+- **Vercel** - Hosting platform
+- **Neon** - Serverless PostgreSQL
+
+---
+
+## ✅ Features Implemented
+
+### Priority 1 (Core Features)
+
+- ✅ User authentication (register, login, logout)
+- ✅ Create, read, update, delete blog posts
+- ✅ Rich text editor with formatting (Tiptap)
+- ✅ Post categorization (predefined 31 categories)
+- ✅ User dashboard for managing posts
+- ✅ Publish/unpublish posts
+- ✅ Protected routes (middleware-based)
+- ✅ Type-safe API with tRPC
+- ✅ Responsive design
+
+### Priority 2 (Enhanced Features)
+
+- ✅ Post statistics (word count, reading time)
+- ✅ Search functionality (posts & categories)
+- ✅ Category filtering with dropdown
+- ✅ Live markdown preview toggle
+- ✅ Auto-generate slugs from titles
+- ✅ Post excerpt support
+- ✅ Dark/light mode with neon theme
+- ✅ SEO meta tags (dynamic per post)
+- ✅ Pagination (9 posts per page)
+
+### Priority 3 (Polish)
+
+- ✅ Professional landing page (5 sections)
+- ✅ Hover effects on all interactive elements
+- ✅ Loading states and skeletons
+- ✅ Error handling with user feedback
+- ✅ Mobile-responsive navbar
+- ✅ Active filter badges
+- ✅ Post count display
+- ✅ Minimal footer with copyright
+- ✅ Image support in rich text editor
+- ✅ Link insertion in editor
+
+---
+
+## 🛠️ Setup Instructions
 
 ### Prerequisites
 
-- Node.js 18+ and npm/pnpm
-- PostgreSQL database (Neon recommended)
+- Node.js 18+ and npm
+- PostgreSQL database (Neon account - free tier)
+- Git
 
-### Installation
+### Local Setup Steps
 
-1. Clone the repository and install dependencies:
-   \`\`\`bash
-   npm install
+1. **Clone the repository**
 
-# or
+   ```bash
+   git clone https://github.com/yourusername/blogit.git
+   cd blogit
+   ```
 
-pnpm install
-\`\`\`
+2. **Install dependencies**
 
-2. Set up your environment variables in the Vercel project settings:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
 
-   - \`NEON_DATABASE_URL\` - Your Neon PostgreSQL connection string
-   - \`JWT_SECRET\` - Secret key for JWT token signing (generate a random string)
+   _Note: `--legacy-peer-deps` is required due to React 19 compatibility_
 
-3. Run the database setup script to create tables and seed sample data:
-   \`\`\`bash
+3. **Set up environment variables**
+
+   Create a `.env.local` file in the root directory:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Fill in the required variables (see [Environment Variables](#environment-variables))
+
+4. **Run database setup script**
+
+   ```bash
    npm run setup-db
-   \`\`\`
+   ```
 
-4. Start the development server:
-   \`\`\`bash
+   This will:
+
+   - Create all required tables (users, posts, categories, post_categories)
+   - Seed 31 predefined categories
+   - Create 2 demo users
+   - Create sample blog posts
+
+5. **Start development server**
+
+   ```bash
    npm run dev
-   \`\`\`
+   ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+6. **Open your browser**
 
-### Demo Credentials
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-After running the setup script, you can log in with:
+7. **Login with demo credentials**
+   - Email: `demo@example.com` / Password: `demo123456`
+   - Email: `test@example.com` / Password: `test123456`
 
-- **Email**: demo@example.com, **Password**: demo123456
-- **Email**: test@example.com, **Password**: test123456
+---
 
-## Project Structure
+## 🔐 Environment Variables
 
-\`\`\`
-├── app/
-│ ├── layout.tsx # Root layout with navbar
-│ ├── page.tsx # Home page - displays all posts
-│ ├── auth/
-│ │ ├── login/
-│ │ │ └── page.tsx # Login page
-│ │ └── register/
-│ │ └── page.tsx # Registration page
-│ ├── api/auth/
-│ │ ├── login/
-│ │ │ └── route.ts # Login endpoint
-│ │ ├── register/
-│ │ │ └── route.ts # Registration endpoint
-│ │ ├── logout/
-│ │ │ └── route.ts # Logout endpoint
-│ │ └── me/
-│ │ └── route.ts # Get current user endpoint
-│ ├── posts/
-│ │ └── [slug]/
-│ │ └── page.tsx # Individual post page
-│ ├── categories/
-│ │ └── [slug]/
-│ │ └── page.tsx # Category posts page
-│ └── dashboard/
-│ ├── layout.tsx # Dashboard layout (protected)
-│ ├── page.tsx # Dashboard overview
-│ ├── posts/
-│ │ ├── page.tsx # Posts management
-│ │ ├── new/
-│ │ │ └── page.tsx # Create new post
-│ │ └── [id]/edit/
-│ │ └── page.tsx # Edit post
-│ └── categories/
-│ ├── page.tsx # Categories management
-│ ├── new/
-│ │ └── page.tsx # Create new category
-│ └── [id]/edit/
-│ └── page.tsx # Edit category
-├── components/
-│ ├── navbar.tsx # Navigation bar with auth UI
-│ ├── post-card.tsx # Post card component
-│ ├── post-form.tsx # Post creation/edit form
-│ ├── markdown-editor.tsx # Markdown editor with preview
-│ └── ui/ # shadcn/ui components
-├── lib/
-│ ├── auth/
-│ │ ├── crypto.ts # Password hashing and verification
-│ │ └── session.ts # JWT token management
-│ ├── db/
-│ │ ├── schema.ts # Drizzle ORM schema
-│ │ └── client.ts # Database client
-│ ├── trpc/
-│ │ ├── init.ts # tRPC initialization with auth context
-│ │ ├── root.ts # Root router
-│ │ ├── client.ts # tRPC client
-│ │ └── routers/
-│ │ ├── posts.ts # Posts router (with auth)
-│ │ └── categories.ts # Categories router (with auth)
-│ └── hooks/
-│ ├── use-posts.ts # Posts hook
-│ └── use-categories.ts # Categories hook
-├── scripts/
-│ └── setup-db.ts # Database setup script
-├── middleware.ts # Route protection middleware
-└── drizzle.config.ts # Drizzle configuration
-\`\`\`
+All environment variables must be set in `.env.local` for local development, or in your Vercel project settings for production.
 
-## Authentication
+### Required Variables
 
-### How It Works
+```bash
+# Database Connection
+NEON_DATABASE_URL="postgresql://username:password@host/database?sslmode=require"
 
-1. **Registration** - Users create an account with email and password
-2. **Password Hashing** - Passwords are hashed using PBKDF2 with salt
-3. **Login** - Users authenticate with email and password
-4. **JWT Tokens** - Secure JWT tokens are issued and stored in HTTP-only cookies
-5. **Protected Routes** - Middleware protects dashboard routes and requires authentication
-6. **Protected Procedures** - tRPC procedures verify user authentication before allowing mutations
+# Authentication
+JWT_SECRET="your-super-secret-jwt-key-min-32-characters-long"
+```
 
-### Protected Routes
+### Getting Your Neon Database URL
 
-The following routes require authentication:
+1. Sign up at [Neon.tech](https://neon.tech) (free)
+2. Create a new project
+3. Copy the connection string from the dashboard
+4. Paste it into your `.env.local` file
 
-- `/dashboard` - Dashboard overview
-- `/dashboard/posts` - Posts management
-- `/dashboard/posts/new` - Create new post
-- `/dashboard/posts/[id]/edit` - Edit post
-- `/dashboard/categories` - Categories management
-- `/dashboard/categories/new` - Create new category
-- `/dashboard/categories/[id]/edit` - Edit category
+### Generating JWT Secret
 
-Unauthenticated users are automatically redirected to `/auth/login`.
+```bash
+# On macOS/Linux:
+openssl rand -base64 32
 
-### API Routes
+# Or use any random string generator (minimum 32 characters)
+```
 
-#### Authentication
+### Example `.env.local`
 
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login user
-- `POST /api/auth/logout` - Logout user
-- `GET /api/auth/me` - Get current user info
+```bash
+NEON_DATABASE_URL="postgresql://user:pass@ep-cool-name.us-east-2.aws.neon.tech/neondb?sslmode=require"
+JWT_SECRET="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
+```
 
-## API Routes
+---
 
-### Posts
+## 🗄️ Database Setup
 
-- `posts.getAll()` - Get all published posts (public)
-- `posts.getBySlug(slug)` - Get a specific post by slug (public)
-- `posts.getByCategory(slug)` - Get posts in a category (public)
-- `posts.getByAuthor()` - Get current user's posts (protected)
-- `posts.create(data)` - Create a new post (protected)
-- `posts.update(data)` - Update a post (protected, owner only)
-- `posts.delete(id)` - Delete a post (protected, owner only)
-- `posts.publish(id)` - Publish a post (protected, owner only)
+### Schema Overview
 
-### Categories
+#### Users Table
 
-- `categories.getAll()` - Get all categories (public)
-- `categories.getBySlug(slug)` - Get a specific category (public)
-- `categories.create(data)` - Create a new category (protected)
-- `categories.update(data)` - Update a category (protected)
-- `categories.delete(id)` - Delete a category (protected)
+- **users**: Stores user information
+  - `id`: UUID, primary key
+  - `email`: String, unique, not null
+  - `name`: String, not null
+  - `password`: String, not null (hashed)
+  - `created_at`: Timestamp, default now()
+  - `updated_at`: Timestamp, default now()
 
-## Database Schema
+#### Posts Table
 
-### Users
+- **posts**: Stores blog posts
+  - `id`: Integer, primary key, auto-increment
+  - `title`: String, not null
+  - `slug`: String, unique, not null
+  - `content`: Text, not null
+  - `excerpt`: Text, not null
+  - `author_id`: UUID, foreign key references users(id), not null
+  - `published`: Boolean, default false
+  - `created_at`: Timestamp, default now()
+  - `updated_at`: Timestamp, default now()
 
-- `id` (TEXT, PRIMARY KEY)
-- `email` (VARCHAR, UNIQUE)
-- `name` (VARCHAR)
-- `password` (TEXT) - Hashed password
-- `created_at` (TIMESTAMP)
-- `updated_at` (TIMESTAMP)
+#### Categories Table
 
-### Posts
+- **categories**: Stores post categories
+  - `id`: Integer, primary key, auto-increment
+  - `name`: String, unique, not null
+  - `slug`: String, unique, not null
+  - `description`: Text
+  - `created_at`: Timestamp, default now()
 
-- `id` (SERIAL, PRIMARY KEY)
-- `title` (VARCHAR)
-- `slug` (VARCHAR, UNIQUE)
-- `content` (TEXT)
-- `excerpt` (TEXT)
-- `author_id` (TEXT, FOREIGN KEY → users.id)
-- `published` (BOOLEAN)
-- `created_at` (TIMESTAMP)
-- `updated_at` (TIMESTAMP)
+#### Post Categories Table (Junction Table)
 
-### Categories
+- **post_categories**: Associates posts with categories
+  - `post_id`: Integer, foreign key references posts(id), primary key
+  - `category_id`: Integer, foreign key references categories(id), primary key
 
-- `id` (SERIAL, PRIMARY KEY)
-- `name` (VARCHAR, UNIQUE)
-- `slug` (VARCHAR, UNIQUE)
-- `description` (TEXT)
-- `created_at` (TIMESTAMP)
+### Relationships
 
-### Post Categories (Junction Table)
+- A user can have many posts (one-to-many)
+- A post belongs to one user (many-to-one)
+- A post can have many categories (many-to-many)
+- A category can have many posts (many-to-many)
 
-- `post_id` (INTEGER, FOREIGN KEY → posts.id)
-- `category_id` (INTEGER, FOREIGN KEY → categories.id)
+---
 
-## Development
+## 🔌 tRPC Router Structure
 
-### Running Scripts
+### Auth Router
 
-To run the database setup script:
-\`\`\`bash
-npm run setup-db
-\`\`\`
+- **login**: Authenticates user and returns JWT
+- **register**: Registers new user and returns JWT
+- **logout**: Logs out user (invalidates JWT)
+- **me**: Returns current user info (protected)
 
-### Building for Production
+### Post Router
 
-\`\`\`bash
-npm run build
-npm start
-\`\`\`
+- **getAll**: Returns all published posts (public)
+- **getBySlug**: Returns a post by slug (public)
+- **getByCategory**: Returns posts in a category (public)
+- **getByAuthor**: Returns current user's posts (protected)
+- **create**: Creates a new post (protected)
+- **update**: Updates a post (protected, owner only)
+- **delete**: Deletes a post (protected, owner only)
+- **publish**: Publishes a post (protected, owner only)
 
-### Environment Variables
+### Category Router
 
-Make sure to set these environment variables in your Vercel project:
+- **getAll**: Returns all categories (public)
+- **getBySlug**: Returns a category by slug (public)
+- **create**: Creates a new category (protected)
+- **update**: Updates a category (protected)
+- **delete**: Deletes a category (protected)
 
-- \`NEON_DATABASE_URL\` - PostgreSQL connection string from Neon
-- \`JWT_SECRET\` - Secret key for JWT signing (generate a random string for production)
+---
+
+## ⚖️ Trade-offs & Decisions
+
+- **Next.js 15 App Router**: Chose App Router for better nested routing and layout support.
+- **tRPC**: Used for end-to-end type-safe API, simplifying data fetching and mutations.
+- **Drizzle ORM**: Opted for Drizzle ORM for its type-safe database queries and migrations.
+- **PostgreSQL (Neon)**: Chose Neon for its serverless PostgreSQL offering, simplifying deployment and scaling.
+- **Tailwind CSS & shadcn/ui**: Used for rapid, responsive design with a utility-first approach.
+
+---
+
+## ⏱️ Time Spent
+
+- **Initial Setup**: 2 hours
+- **Authentication**: 3 hours
+- **Post Management**: 4 hours
+- **Category Management**: 3 hours
+- **UI Development**: 5 hours
+- **Testing & Debugging**: 3 hours
+- **Deployment**: 2 hours
+
+**Total**: 22 hours
+
+---
 
 ## Future Enhancements
 

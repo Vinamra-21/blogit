@@ -17,7 +17,16 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectItem } from "@/components/ui/select";
-import { X } from "lucide-react";
+import { X, Eye } from "lucide-react";
+import { RichTextEditor } from "./rich-text-editor";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { getWordCount, getReadingTime } from "@/lib/utils";
 
 interface PostFormProps {
   postId?: number;
@@ -41,6 +50,8 @@ export function PostForm({ postId, initialData }: PostFormProps) {
     excerpt: initialData?.excerpt || "",
   });
 
+  const [showPreview, setShowPreview] = useState(false);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -56,7 +67,6 @@ export function PostForm({ postId, initialData }: PostFormProps) {
     fetchCategories();
   }, []);
 
-  // Auto-generate slug from title
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
@@ -177,26 +187,14 @@ export function PostForm({ postId, initialData }: PostFormProps) {
             />
           </div>
 
-          {/* Content - Improved Textarea */}
+          {/* Rich Text Editor */}
           <div className="space-y-2">
-            <Label htmlFor="content" className="text-gray-900 dark:text-white">
-              Content (Markdown supported)
-            </Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) =>
-                setFormData({ ...formData, content: e.target.value })
-              }
-              placeholder="Write your post content here... (Markdown is supported)"
-              rows={15}
-              required
-              className="bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 font-mono text-sm resize-y min-h-[300px] placeholder:text-gray-400 dark:placeholder:text-gray-500"
+            <Label className="text-gray-900 dark:text-white">Content</Label>
+            <RichTextEditor
+              content={formData.content}
+              onChange={(content) => setFormData({ ...formData, content })}
+              placeholder="Start writing your post..."
             />
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Tip: You can use Markdown formatting (# for headings, ** for bold,
-              * for italic, etc.)
-            </p>
           </div>
 
           {/* Categories - Dropdown Selection */}
@@ -260,6 +258,97 @@ export function PostForm({ postId, initialData }: PostFormProps) {
           className="bg-emerald-600 hover:bg-emerald-700 dark:bg-[#00ff9d] dark:hover:bg-[#00e68a] text-white dark:text-black btn-hover dark:neon-glow">
           {loading ? "Saving..." : postId ? "Update Post" : "Create Post"}
         </Button>
+
+        {/* Preview Button */}
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!formData.title || !formData.content}
+              className="border-gray-300 dark:border-white/20 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-white/5">
+              <Eye className="w-4 h-4 mr-2" />
+              Preview
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-black border-gray-200 dark:border-white/10">
+            <DialogHeader>
+              <DialogTitle className="text-gray-900 dark:text-white">
+                Post Preview
+              </DialogTitle>
+            </DialogHeader>
+
+            {/* Preview Content */}
+            <div className="space-y-6">
+              <article className="bg-white dark:bg-black rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden">
+                <div className="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-[#00ff9d] dark:to-[#00ccff]" />
+
+                <header className="p-6 md:p-8 border-b border-gray-200 dark:border-white/10 bg-white dark:bg-black">
+                  <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight text-gray-900 dark:text-white">
+                    {formData.title || "Untitled Post"}
+                  </h1>
+
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-[#00ff9d]">
+                      <Eye className="w-4 h-4" />
+                      <span>{getReadingTime(formData.content)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>
+                        {getWordCount(formData.content).toLocaleString()} words
+                      </span>
+                    </div>
+                  </div>
+
+                  {formData.excerpt && (
+                    <p className="text-gray-600 dark:text-gray-400 italic mb-4">
+                      {formData.excerpt}
+                    </p>
+                  )}
+
+                  {selectedCategories.length > 0 && (
+                    <div className="flex gap-2 flex-wrap">
+                      {selectedCategories.map((catId) => {
+                        const category = categories.find((c) => c.id === catId);
+                        return category ? (
+                          <span
+                            key={catId}
+                            className="text-xs bg-emerald-100 dark:bg-[#00ff9d]/20 text-emerald-700 dark:text-[#00ff9d] px-3 py-1 rounded-full font-medium border border-emerald-200 dark:border-[#00ff9d]/30">
+                            {category.name}
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
+                  )}
+                </header>
+
+                <div className="p-6 md:p-8 bg-white dark:bg-black">
+                  <div
+                    className="prose prose-lg dark:prose-invert max-w-none 
+                    prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white 
+                    prose-p:text-gray-700 dark:prose-p:text-white 
+                    prose-a:text-emerald-600 dark:prose-a:text-[#00ff9d] hover:prose-a:underline 
+                    prose-strong:text-gray-900 dark:prose-strong:text-white 
+                    prose-em:text-gray-700 dark:prose-em:text-white
+                    prose-code:text-emerald-600 dark:prose-code:text-[#00ff9d] prose-code:bg-gray-100 dark:prose-code:bg-white/10
+                    prose-pre:bg-gray-100 dark:prose-pre:bg-white/5 prose-pre:text-gray-900 dark:prose-pre:text-white dark:prose-pre:border dark:prose-pre:border-white/10 
+                    prose-blockquote:border-emerald-500 dark:prose-blockquote:border-[#00ff9d] prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-300 
+                    prose-ul:text-gray-700 dark:prose-ul:text-white 
+                    prose-ol:text-gray-700 dark:prose-ol:text-white 
+                    prose-li:text-gray-700 dark:prose-li:text-white
+                    [&>*]:text-gray-700 dark:[&>*]:text-white"
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        formData.content ||
+                        '<p class="text-gray-400 dark:text-gray-500">No content yet...</p>',
+                    }}
+                  />
+                </div>
+              </article>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <Button
           type="button"
           variant="outline"

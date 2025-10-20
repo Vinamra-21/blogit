@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Footer } from "@/components/footer";
 import "./globals.css";
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -27,6 +28,7 @@ export default function RootLayout({
         <ThemeProvider defaultTheme="system" storageKey="blogit-theme">
           <Navbar />
           {children}
+          <Footer />
           <Analytics />
         </ThemeProvider>
       </body>

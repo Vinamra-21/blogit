@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import * as schema from "./schema";
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "./root";
 
 let db: ReturnType<typeof drizzle> | null = null;
@@ -28,13 +28,22 @@ export function getDb() {
 
 export type Database = ReturnType<typeof getDb>;
 
+function getBaseUrl() {
+  if (typeof window !== "undefined") return ""; // browser should use relative url
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
+  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
+}
+
 // tRPC client proxy for server-side usage. Other files import `trpc`.
-export const trpc = createTRPCProxyClient<AppRouter>({
+export const trpc = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: process.env.TRPC_URL || "http://localhost:3000/api/trpc",
-      fetch: (input, init) =>
-        (globalThis.fetch as any)(input as string, init as any),
+      url: `${getBaseUrl()}/api/trpc`,
+      headers() {
+        return {
+          "content-type": "application/json",
+        };
+      },
     }),
   ],
 });
