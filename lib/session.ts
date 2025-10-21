@@ -54,7 +54,9 @@ export async function deleteSessionCookie(): Promise<void> {
   cookieStore.delete("auth-token");
 }
 
-// Get session from cookies
+// Alias for compatibility
+export const clearSessionCookie = deleteSessionCookie;
+
 export async function getSession(): Promise<SessionPayload | null> {
   try {
     const cookieStore = await cookies();
@@ -69,3 +71,6 @@ export async function getSession(): Promise<SessionPayload | null> {
     return null;
   }
 }
+
+// Alias for compatibility
+export const verifySession = getSession;
