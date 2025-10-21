@@ -1,29 +1,25 @@
-import crypto from "crypto"
+import { pbkdf2Sync, randomBytes } from "crypto";
 
 // Hash password using PBKDF2
-export async function hashPassword(password: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const salt = crypto.randomBytes(16).toString("hex")
-    crypto.pbkdf2(password, salt, 100000, 64, "sha512", (err, derivedKey) => {
-      if (err) reject(err)
-      const hash = salt + ":" + derivedKey.toString("hex")
-      resolve(hash)
-    })
-  })
+export function hashPassword(password: string): string {
+  const salt = randomBytes(16).toString("hex");
+  const hash = pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
+  return `${salt}:${hash}`;
 }
 
 // Verify password against hash
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return new Promise((resolve, reject) => {
-    const [salt, key] = hash.split(":")
-    crypto.pbkdf2(password, salt, 100000, 64, "sha512", (err, derivedKey) => {
-      if (err) reject(err)
-      resolve(key === derivedKey.toString("hex"))
-    })
-  })
+export function verifyPassword(
+  password: string,
+  hashedPassword: string
+): boolean {
+  const [salt, hash] = hashedPassword.split(":");
+  const verifyHash = pbkdf2Sync(password, salt, 1000, 64, "sha512").toString(
+    "hex"
+  );
+  return hash === verifyHash;
 }
 
 // Generate session token
 export function generateSessionToken(): string {
-  return crypto.randomBytes(32).toString("hex")
+  return randomBytes(32).toString("hex");
 }

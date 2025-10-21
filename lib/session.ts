@@ -1,5 +1,5 @@
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { jwtVerify, SignJWT } from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -7,8 +7,6 @@ export interface SessionPayload {
   userId: string;
   email: string;
   name: string;
-  iat: number;
-  exp: number;
 }
 
 // Create JWT session token
@@ -27,26 +25,15 @@ export async function createSession(
 }
 
 // Verify and decode JWT token
-export async function verifySession(
+export async function verifyToken(
   token: string
 ): Promise<SessionPayload | null> {
   try {
-    const verified = await jwtVerify(token, secret);
-    // Verified payload is JWTPayload; cast via unknown to our SessionPayload shape
-    return verified.payload as unknown as SessionPayload;
-  } catch (err) {
+    const { payload } = await jwtVerify(token, secret);
+    return payload as SessionPayload;
+  } catch (error) {
     return null;
   }
-}
-
-// Get session from cookies
-export async function getSession(): Promise<SessionPayload | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("auth-token")?.value;
-
-  if (!token) return null;
-
-  return verifySession(token);
 }
 
 // Set session cookie
@@ -62,7 +49,23 @@ export async function setSessionCookie(token: string): Promise<void> {
 }
 
 // Clear session cookie
-export async function clearSessionCookie(): Promise<void> {
+export async function deleteSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete("auth-token");
+}
+
+// Get session from cookies
+export async function getSession(): Promise<SessionPayload | null> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth-token")?.value;
+
+    if (!token) {
+      return null;
+    }
+
+    return await verifyToken(token);
+  } catch (error) {
+    return null;
+  }
 }

@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { cookies } from "next/headers";
-import { verifyToken } from "../auth/session";
+import { verifyToken } from "../session";
 
 export const t = initTRPC.create({
   errorFormatter({ shape }) {
@@ -24,4 +24,17 @@ export const createContext = async () => {
   }
 };
 
-export type Context = inferAsyncReturnType<typeof createContext>;
+export const router = t.router;
+export const publicProcedure = t.procedure;
+
+export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({
+    ctx: {
+      session: ctx.session,
+    },
+  });
+});
