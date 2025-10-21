@@ -1,14 +1,14 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { cookies } from "next/headers";
-import { verifyToken } from "../session";
+import { verifyToken, type SessionPayload } from "../session";
 
-export const t = initTRPC.create({
-  errorFormatter({ shape }) {
-    return shape;
-  },
-});
+// Define the context type
+export type Context = {
+  session: SessionPayload | null;
+};
 
-export const createContext = async () => {
+// Create context function
+export const createContext = async (): Promise<Context> => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("auth-token")?.value;
@@ -23,6 +23,13 @@ export const createContext = async () => {
     return { session: null };
   }
 };
+
+// Initialize tRPC with context type
+export const t = initTRPC.context<Context>().create({
+  errorFormatter({ shape }) {
+    return shape;
+  },
+});
 
 export const router = t.router;
 export const publicProcedure = t.procedure;

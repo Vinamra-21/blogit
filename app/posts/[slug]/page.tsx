@@ -76,7 +76,7 @@ export default function PostPage() {
           </Button>
         </Link>
 
-        <article className="bg-card rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-sm dark:shadow-[#00ff9d]/10 dark:neon-border bg-white dark:bg-black">
+        <article className="bg-card rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-sm dark:shadow-[#00ff9d]/10 dark:neon-border dark:bg-black">
           <div className="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-[#00ff9d] dark:to-[#00ccff]" />
 
           <header className="p-6 md:p-10 border-b border-gray-200 dark:border-white/10">
