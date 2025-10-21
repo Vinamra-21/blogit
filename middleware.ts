@@ -12,16 +12,9 @@ export async function middleware(request: NextRequest) {
   );
 
   if (isProtectedRoute) {
-    const token = request.cookies.get("auth-token")?.value;
-
-    if (!token) {
-      const loginUrl = new URL("/auth/login", request.url);
-      loginUrl.searchParams.set("from", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
     try {
-      const payload = await verifySession(token);
+      const payload = await verifySession();
+
       if (!payload) {
         const loginUrl = new URL("/auth/login", request.url);
         loginUrl.searchParams.set("from", pathname);
