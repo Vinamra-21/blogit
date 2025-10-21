@@ -425,8 +425,8 @@ export default function Home() {
                   <Link key={post.id} href={`/posts/${post.slug}`}>
                     <Card className="h-full hover:shadow-xl dark:hover:shadow-[#00ff9d]/20 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden group border-2 border-gray-200 hover:border-emerald-300 dark:border-white/20 dark:hover:border-[#00ff9d]/50 bg-white dark:bg-black">
                       <div className="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-[#00ff9d] dark:to-[#00ccff] group-hover:h-3 transition-all" />
-                      <CardHeader>
-                        <CardTitle className="line-clamp-2 text-gray-900 group-hover:text-emerald-600 dark:text-white dark:group-hover:text-[#00ff9d] transition-colors">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="line-clamp-2 leading-relaxed text-gray-900 group-hover:text-emerald-600 dark:text-white dark:group-hover:text-[#00ff9d] transition-colors min-h-[3.5rem]">
                           {post.title}
                         </CardTitle>
                         <CardDescription className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -437,7 +437,7 @@ export default function Home() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed mb-4">
                           {post.excerpt || post.content.substring(0, 150)}
                         </p>
                         {post.categories && post.categories.length > 0 && (

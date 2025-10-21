@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/lib/stores/auth-store";
 
 export default function RegisterPage() {
@@ -28,6 +28,8 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,8 +78,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen gradient-bg flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md shadow-2xl dark:shadow-[#00ff9d]/20 border border-gray-200 dark:border-white/10 dark:neon-border bg-white dark:bg-black">
+    <main className="min-h-screen gradient-bg flex items-center justify-center p-4">
+      <Card className="w-full max-w-md border-gray-200 dark:border-white/10 bg-white dark:bg-black">
         <div className="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-[#00ff9d] dark:to-[#00ccff] rounded-t-xl" />
         <CardHeader className="text-center pb-4">
           <div className="mx-auto w-14 h-14 bg-emerald-600 dark:bg-[#00ff9d] rounded-xl flex items-center justify-center mb-4 dark:neon-glow-strong">
@@ -90,14 +92,14 @@ export default function RegisterPage() {
             Join BlogIt and start sharing your stories
           </CardDescription>
         </CardHeader>
-        <CardContent className="pt-0">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-red-50 dark:bg-[#ff0066]/10 border border-red-200 dark:border-[#ff0066]/30 text-red-700 dark:text-[#ff0066] p-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
+        <CardContent className="space-y-4">
+          {error && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-400 p-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
 
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-900 dark:text-white">
                 Name
@@ -128,34 +130,69 @@ export default function RegisterPage() {
               />
             </div>
 
+            {/* Password field with toggle */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-900 dark:text-white">
                 Password
               </label>
-              <Input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="At least 8 characters"
-                required
-                className="h-11 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:focus:border-[#00ff9d] transition-colors"
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  placeholder="Create a password (min. 8 characters)"
+                  required
+                  minLength={8}
+                  className="pr-10 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors">
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
+            {/* Confirm Password field with toggle */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-900 dark:text-white">
                 Confirm Password
               </label>
-              <Input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Confirm your password"
-                required
-                className="h-11 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:focus:border-[#00ff9d] transition-colors"
-              />
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={formData.confirmPassword}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                  placeholder="Confirm your password"
+                  required
+                  minLength={8}
+                  className="pr-10 bg-white dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors">
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <Button

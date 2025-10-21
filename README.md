@@ -2,7 +2,7 @@
 
 A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
 
-**Live Demo**: [https://blogit-vin.vercel.app](https://blogit-vin.vercel.app) _(Deploy to get link)_
+**Live Demo**: [https://blogit-vin.vercel.app](https://blogit-vin.vercel.app)
 
 **Repository**: [https://github.com/Vinamra-21/blogit](https://github.com/Vinamra-21/blogit)
 
@@ -10,12 +10,39 @@ A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tR
 
 ## 📋 Table of Contents
 
+- [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Setup Instructions](#setup-instructions)
 - [Environment Variables](#environment-variables)
 - [Database Setup](#database-setup)
 - [tRPC Router Structure](#trpc-router-structure)
 - [Trade-offs & Decisions](#trade-offs--decisions)
+
+---
+
+## ✨ Features
+
+### Core Features
+
+- **User Authentication** - Secure JWT-based auth with encrypted passwords
+- **CRUD Operations** - Create, read, update, delete blog posts
+- **Rich Text Editor** - Professional Tiptap WYSIWYG editor with formatting
+- **Categories** - 31 predefined categories for content organization
+- **Dashboard** - Centralized post management interface
+- **Publish/Unpublish** - Control post visibility
+- **Protected Routes** - Middleware-based authentication
+- **Type-Safe API** - End-to-end type safety with tRPC
+- **Responsive Design** - Mobile-first approach with Tailwind CSS
+- **Post Statistics** - Word count and estimated reading time
+- **Search & Filter** - Search posts and filter by categories
+- **Post Preview** - Live preview modal before publishing
+- **Auto-generate Slugs** - SEO-friendly URLs from titles (editable)
+- **Post Excerpts** - Optional summaries for posts
+- **Dark/Light Mode** - Theme toggle with neon dark mode
+- **Pagination** - 9 posts per page with smooth navigation
+- **State Management** - Zustand for optimized global state
+- **Image Support** - Add images via URLs in rich text editor
+- **Link Insertion** - Hyperlinks in blog content
 
 ---
 
@@ -29,24 +56,21 @@ A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tR
 - **Tailwind CSS** - Utility-first styling
 - **shadcn/ui** - Component library
 - **Tiptap** - Rich text editor
-- **ReactMarkdown** - Markdown rendering
+- **Zustand** - State management
+- **Zod** - Schema validation
 
 ### Backend
 
 - **tRPC** - End-to-end type-safe API
 - **Drizzle ORM** - Type-safe database queries
-- **PostgreSQL (Neon)** - Database
-- **Zod** - Schema validation
-
-### Authentication
-
-- **JWT** - Token-based authentication
+- **PostgreSQL (Neon)** - Serverless database
+- **JWT (jose)** - Token-based authentication
 - **PBKDF2** - Password hashing with salt
 
 ### Deployment
 
 - **Vercel** - Hosting platform
-- **Neon** - Serverless PostgreSQL
+- **Neon** - PostgreSQL hosting
 
 ---
 
@@ -236,21 +260,106 @@ JWT_SECRET="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
 
 ## ⚖️ Trade-offs & Decisions
 
-- **Next.js 15 App Router**: Chose App Router for better nested routing and layout support.
-- **tRPC**: Used for end-to-end type-safe API, simplifying data fetching and mutations.
-- **Drizzle ORM**: Opted for Drizzle ORM for its type-safe database queries and migrations.
-- **PostgreSQL (Neon)**: Chose Neon for its serverless PostgreSQL offering, simplifying deployment and scaling.
-- **Tailwind CSS & shadcn/ui**: Used for rapid, responsive design with a utility-first approach.
+### Architecture Decisions
+
+**1. Client-Side Data Fetching with tRPC**
+
+- **Decision**: Use client components with tRPC for data fetching
+- **Pros**: Full type safety, easy mutations, optimistic updates
+- **Cons**: No server-side meta tags for SEO (trade-off accepted)
+- **Rationale**: Type safety and developer experience prioritized
+
+**2. Predefined Categories**
+
+- **Decision**: 31 curated categories (no user-created categories)
+- **Pros**: Consistent organization, prevents fragmentation, better UX
+- **Cons**: Less flexibility for niche topics
+- **Rationale**: Quality and structure over unlimited flexibility
+
+**3. Rich Text Editor (Tiptap)**
+
+- **Decision**: Tiptap WYSIWYG with HTML storage
+- **Pros**: Non-technical user friendly, richer formatting, image/link support
+- **Cons**: Larger bundle size than plain markdown
+- **Rationale**: Better user experience for content creators
+
+**4. Zustand for State Management**
+
+- **Decision**: Zustand instead of Redux or Context API
+- **Pros**: Minimal boilerplate, better performance, easy to learn
+- **Cons**: Less ecosystem than Redux
+- **Rationale**: Simplicity and performance for this app size
+
+**5. JWT in HTTP-only Cookies**
+
+- **Decision**: Store tokens in HTTP-only cookies vs localStorage
+- **Pros**: XSS protection, automatic inclusion in requests, secure
+- **Cons**: Slightly more complex implementation
+- **Rationale**: Security best practices
+
+**6. Auto-generate Slugs with Manual Override**
+
+- **Decision**: Auto-generate from title, allow manual editing
+- **Pros**: Convenience + flexibility, prevents errors, SEO-friendly
+- **Cons**: Extra UI complexity
+- **Rationale**: Best of both worlds
+
+**7. Pagination over Infinite Scroll**
+
+- **Decision**: Traditional pagination (9 posts/page)
+- **Pros**: SEO-friendly, shareable URLs, lower memory usage
+- **Cons**: Less "modern" than infinite scroll
+- **Rationale**: Better for SEO and navigation
 
 ---
 
-## Future Enhancements
+## 🎯 Key Features Explained
 
-- Comments system
-- Search functionality
-- Tags in addition to categories
-- Post scheduling
-- Analytics dashboard
-- Social sharing
-- Email notifications
-- OAuth authentication (Google, GitHub)
+### Post Management
+
+- Create posts with rich text editor
+- Auto-save drafts
+- Preview before publishing
+- Edit/delete your own posts
+- Publish/unpublish anytime
+
+### Content Organization
+
+- 31 predefined categories
+- Multi-category support per post
+- Search across titles, content, excerpts
+- Filter by category
+- Smart pagination
+
+### User Experience
+
+- Instant search results
+- Loading skeletons
+- Error recovery
+- Dark mode preference saved
+- Mobile-optimized
+
+### Security
+
+- JWT authentication
+- HTTP-only cookies
+- Password hashing (PBKDF2)
+- Protected routes
+- Session management
+
+---
+
+## 🚧 Future Enhancements
+
+- [ ] Comments system
+- [ ] User profiles
+- [ ] Tags (in addition to categories)
+- [ ] Post scheduling
+- [ ] Analytics dashboard
+- [ ] Social media sharing
+- [ ] Email notifications
+- [ ] OAuth (Google, GitHub)
+- [ ] Image uploads (currently URL-only)
+- [ ] Draft auto-save
+- [ ] Post versioning
+- [ ] Full-text search
