@@ -16,7 +16,6 @@ A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tR
 - [Database Setup](#database-setup)
 - [tRPC Router Structure](#trpc-router-structure)
 - [Trade-offs & Decisions](#trade-offs--decisions)
-- [Time Spent](#time-spent)
 
 ---
 
@@ -245,20 +244,6 @@ JWT_SECRET="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
 
 ---
 
-## ⏱️ Time Spent
-
-- **Initial Setup**: 2 hours
-- **Authentication**: 3 hours
-- **Post Management**: 4 hours
-- **Category Management**: 3 hours
-- **UI Development**: 5 hours
-- **Testing & Debugging**: 3 hours
-- **Deployment**: 2 hours
-
-**Total**: 22 hours
-
----
-
 ## Future Enhancements
 
 - Comments system
@@ -269,7 +254,3 @@ JWT_SECRET="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
 - Social sharing
 - Email notifications
 - OAuth authentication (Google, GitHub)
-
-## License
-
-MIT

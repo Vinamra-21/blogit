@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+"use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -7,26 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Calendar, User, Clock, BookOpen } from "lucide-react";
 import { getWordCount, getReadingTime } from "@/lib/utils";
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const post = await trpc.posts.getBySlug.query(params.slug);
-
-  if (!post) {
-    return { title: "Post Not Found | BlogIt" };
-  }
-
-  return {
-    title: `${post.title} | BlogIt`,
-    description:
-      post.excerpt || post.content.replace(/<[^>]*>/g, "").substring(0, 160),
-    keywords: post.categories?.map((cat) => cat.name).join(", "),
-    // ...other SEO tags
-  };
-}
 
 export default function PostPage() {
   const params = useParams();
