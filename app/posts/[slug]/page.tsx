@@ -76,7 +76,7 @@ export default function PostPage() {
           </Button>
         </Link>
 
-        <article className="bg-card rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-sm dark:shadow-[#00ff9d]/10 dark:neon-border dark:bg-black">
+        <article className="bg-card rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-sm dark:shadow-[#00ff9d]/10 dark:neon-border bg-white dark:bg-black">
           <div className="h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 dark:from-[#00ff9d] dark:to-[#00ccff]" />
 
           <header className="p-6 md:p-10 border-b border-gray-200 dark:border-white/10">
@@ -124,9 +124,24 @@ export default function PostPage() {
             )}
           </header>
 
-          <div className="p-6 md:p-10">
+          <div className="p-6 md:p-10 bg-white dark:bg-black">
             <div
-              className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-a:text-emerald-600 dark:prose-a:text-[#00ff9d] hover:prose-a:underline prose-strong:text-gray-900 dark:prose-strong:text-white prose-code:text-emerald-600 dark:prose-code:text-[#00ff9d] prose-pre:bg-gray-100 dark:prose-pre:bg-white/5 dark:prose-pre:border dark:prose-pre:border-white/10 prose-blockquote:border-emerald-500 dark:prose-blockquote:border-[#00ff9d] prose-blockquote:text-gray-600 dark:prose-blockquote:text-gray-400"
+              className="prose prose-lg dark:prose-invert max-w-none 
+              prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white 
+              prose-p:text-gray-700 dark:prose-p:!text-white 
+              prose-a:text-emerald-600 dark:prose-a:text-[#00ff9d] hover:prose-a:underline 
+              prose-strong:text-gray-900 dark:prose-strong:!text-white 
+              prose-em:text-gray-700 dark:prose-em:!text-white
+              prose-code:text-emerald-600 dark:prose-code:text-[#00ff9d] prose-code:bg-gray-100 dark:prose-code:bg-white/10
+              prose-pre:bg-gray-100 dark:prose-pre:bg-white/5 prose-pre:text-gray-900 dark:prose-pre:!text-white dark:prose-pre:border dark:prose-pre:border-white/10 
+              prose-blockquote:border-emerald-500 dark:prose-blockquote:border-[#00ff9d] prose-blockquote:text-gray-600 dark:prose-blockquote:!text-gray-300 
+              prose-ul:text-gray-700 dark:prose-ul:!text-white 
+              prose-ol:text-gray-700 dark:prose-ol:!text-white 
+              prose-li:text-gray-700 dark:prose-li:!text-white
+              [&>*]:text-gray-700 dark:[&>*]:!text-white
+              [&_p]:text-gray-700 dark:[&_p]:!text-white
+              [&_span]:text-gray-700 dark:[&_span]:!text-white
+              [&_div]:text-gray-700 dark:[&_div]:!text-white"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
