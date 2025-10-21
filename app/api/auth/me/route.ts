@@ -6,15 +6,10 @@ import { eq } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get("auth-token")?.value;
+    const session = await verifySession();
 
-    if (!token) {
+    if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const payload = await verifySession(token);
-    if (!payload) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     const db = getDb();
@@ -25,7 +20,7 @@ export async function GET(request: NextRequest) {
         name: users.name,
       })
       .from(users)
-      .where(eq(users.id, payload.userId))
+      .where(eq(users.id, session.userId))
       .limit(1);
 
     if (!user.length) {
