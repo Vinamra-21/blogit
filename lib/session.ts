@@ -30,7 +30,21 @@ export async function verifyToken(
 ): Promise<SessionPayload | null> {
   try {
     const { payload } = await jwtVerify(token, secret);
-    return payload as SessionPayload;
+
+    // Validate that payload has required fields
+    if (
+      typeof payload.userId === "string" &&
+      typeof payload.email === "string" &&
+      typeof payload.name === "string"
+    ) {
+      return {
+        userId: payload.userId,
+        email: payload.email,
+        name: payload.name,
+      };
+    }
+
+    return null;
   } catch (error) {
     return null;
   }

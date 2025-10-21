@@ -2,9 +2,9 @@
 
 A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tRPC, Drizzle ORM, and PostgreSQL.
 
-**Live Demo**: [https://your-app.vercel.app](https://your-app.vercel.app) _(Deploy to get link)_
+**Live Demo**: [https://blogit-vin.vercel.app](https://blogit-vin.vercel.app) _(Deploy to get link)_
 
-**Repository**: [https://github.com/yourusername/blogit](https://github.com/yourusername/blogit)
+**Repository**: [https://github.com/Vinamra-21/blogit](https://github.com/Vinamra-21/blogit)
 
 ---
 
