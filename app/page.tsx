@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { trpc } from "@/lib/client";
+import { usePostsStore } from "@/lib/stores/posts-store";
+import { useCategoriesStore } from "@/lib/stores/categories-store";
 import {
   Card,
   CardContent,
@@ -31,87 +32,38 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [posts, setPosts] = useState<any[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 9;
+  const {
+    posts,
+    filteredPosts,
+    loading,
+    searchQuery,
+    selectedCategory,
+    currentPage,
+    setSearchQuery,
+    setSelectedCategory,
+    setCurrentPage,
+    fetchPosts,
+  } = usePostsStore();
+
+  const {
+    categories,
+    loading: categoriesLoading,
+    fetchCategories,
+  } = useCategoriesStore();
   const [error, setError] = useState<string | null>(null);
 
+  const postsPerPage = 9;
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setError(null);
-        const data = await trpc.posts.getAll.query();
-        setPosts(data);
-        setFilteredPosts(data);
-      } catch (error: any) {
-        console.error("Failed to fetch posts:", error);
-        setError("Failed to load posts. Please refresh the page.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchCategories = async () => {
-      try {
-        const data = await trpc.categories.getAll.query();
-        setCategories(data);
-      } catch (error: any) {
-        console.error("Failed to fetch categories:", error);
-      } finally {
-        setCategoriesLoading(false);
-      }
-    };
-
-    fetchPosts();
+    fetchPosts().catch((err) => setError("Failed to load posts"));
     fetchCategories();
-  }, []);
-
-  // Filter posts based on search query and category
-  useEffect(() => {
-    let filtered = posts;
-
-    // Filter by category
-    if (selectedCategory && selectedCategory !== "") {
-      filtered = filtered.filter((post) =>
-        post.categories?.some(
-          (cat: any) => cat.id === parseInt(selectedCategory)
-        )
-      );
-    }
-
-    // Filter by search query
-    if (searchQuery.trim() !== "") {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (post) =>
-          post.title.toLowerCase().includes(query) ||
-          post.content.toLowerCase().includes(query) ||
-          post.excerpt?.toLowerCase().includes(query) ||
-          post.categories?.some((cat: any) =>
-            cat.name.toLowerCase().includes(query)
-          )
-      );
-    }
-
-    setFilteredPosts(filtered);
-  }, [searchQuery, selectedCategory, posts]);
+  }, [fetchPosts, fetchCategories]);
 
   // Calculate pagination
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

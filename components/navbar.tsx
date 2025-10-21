@@ -12,46 +12,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PenSquare, Menu, X } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 export function Navbar() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [userLoading, setUserLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/auth/me", {
-          credentials: "include",
-          cache: "no-store",
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error("Failed to check auth:", error);
-      } finally {
-        setUserLoading(false);
-      }
-    };
+  const { user, isLoading: userLoading, logout, checkAuth } = useAuthStore();
 
+  useEffect(() => {
     checkAuth();
-  }, []);
+  }, [checkAuth]);
 
   const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      setUser(null);
-      router.push("/");
-      router.refresh();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+    await logout();
+    router.push("/");
+    router.refresh();
   };
 
   return (

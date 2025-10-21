@@ -11,7 +11,6 @@ A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tR
 ## 📋 Table of Contents
 
 - [Tech Stack](#tech-stack)
-- [Features Implemented](#features-implemented)
 - [Setup Instructions](#setup-instructions)
 - [Environment Variables](#environment-variables)
 - [Database Setup](#database-setup)
@@ -49,47 +48,6 @@ A full-stack, multi-user blogging platform built with Next.js 15, TypeScript, tR
 
 - **Vercel** - Hosting platform
 - **Neon** - Serverless PostgreSQL
-
----
-
-## ✅ Features Implemented
-
-### Priority 1 (Core Features)
-
-- ✅ User authentication (register, login, logout)
-- ✅ Create, read, update, delete blog posts
-- ✅ Rich text editor with formatting (Tiptap)
-- ✅ Post categorization (predefined 31 categories)
-- ✅ User dashboard for managing posts
-- ✅ Publish/unpublish posts
-- ✅ Protected routes (middleware-based)
-- ✅ Type-safe API with tRPC
-- ✅ Responsive design
-
-### Priority 2 (Enhanced Features)
-
-- ✅ Post statistics (word count, reading time)
-- ✅ Search functionality (posts & categories)
-- ✅ Category filtering with dropdown
-- ✅ Live markdown preview toggle
-- ✅ Auto-generate slugs from titles
-- ✅ Post excerpt support
-- ✅ Dark/light mode with neon theme
-- ✅ SEO meta tags (dynamic per post)
-- ✅ Pagination (9 posts per page)
-
-### Priority 3 (Polish)
-
-- ✅ Professional landing page (5 sections)
-- ✅ Hover effects on all interactive elements
-- ✅ Loading states and skeletons
-- ✅ Error handling with user feedback
-- ✅ Mobile-responsive navbar
-- ✅ Active filter badges
-- ✅ Post count display
-- ✅ Minimal footer with copyright
-- ✅ Image support in rich text editor
-- ✅ Link insertion in editor
 
 ---
 
