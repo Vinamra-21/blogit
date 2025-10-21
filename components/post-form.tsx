@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectItem } from "@/components/ui/select";
-import { X, Eye } from "lucide-react";
+import { X, Eye, Edit2, Lock, Unlock } from "lucide-react";
 import { RichTextEditor } from "./rich-text-editor";
 import {
   Dialog,
@@ -51,6 +51,7 @@ export function PostForm({ postId, initialData }: PostFormProps) {
   });
 
   const [showPreview, setShowPreview] = useState(false);
+  const [slugLocked, setSlugLocked] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -79,7 +80,17 @@ export function PostForm({ postId, initialData }: PostFormProps) {
     setFormData({
       ...formData,
       title: newTitle,
-      slug: generateSlug(newTitle),
+      slug: slugLocked ? generateSlug(newTitle) : formData.slug,
+    });
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      slug: e.target.value
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/^-|-$/g, ""),
     });
   };
 
@@ -157,17 +168,52 @@ export function PostForm({ postId, initialData }: PostFormProps) {
             />
           </div>
 
-          {/* Slug (auto-generated, read-only) */}
+          {/* Slug with edit toggle */}
           <div className="space-y-2">
-            <Label htmlFor="slug" className="text-gray-900 dark:text-white">
-              Slug (auto-generated)
-            </Label>
-            <Input
-              id="slug"
-              value={formData.slug}
-              readOnly
-              className="bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-400 border-gray-300 dark:border-white/20"
-            />
+            <div className="flex items-center justify-between">
+              <Label htmlFor="slug" className="text-gray-900 dark:text-white">
+                URL Slug
+              </Label>
+              <button
+                type="button"
+                onClick={() => setSlugLocked(!slugLocked)}
+                className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-[#00ff9d] transition-colors">
+                {slugLocked ? (
+                  <>
+                    <Lock className="w-3 h-3" />
+                    Auto-generate
+                  </>
+                ) : (
+                  <>
+                    <Unlock className="w-3 h-3" />
+                    Manual edit
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="relative">
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={handleSlugChange}
+                readOnly={slugLocked}
+                placeholder="post-url-slug"
+                required
+                className={`${
+                  slugLocked
+                    ? "bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                    : "bg-white dark:bg-black text-gray-900 dark:text-white"
+                } border-gray-300 dark:border-white/20 placeholder:text-gray-400 dark:placeholder:text-gray-500`}
+              />
+              {!slugLocked && (
+                <Edit2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
+              )}
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {slugLocked
+                ? "Automatically generated from title. Click unlock to edit manually."
+                : "Manual mode: Changes won't sync with title."}
+            </p>
           </div>
 
           {/* Excerpt */}

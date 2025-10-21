@@ -15,11 +15,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LogIn } from "lucide-react";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { checkAuth } = useAuthStore();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,19 +43,22 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Login failed");
-        return;
+        throw new Error(data.error || "Login failed");
       }
 
+      // Update Zustand store
+      await checkAuth();
+
       router.push("/dashboard");
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      console.error(err);
+      router.refresh();
+    } catch (error: any) {
+      setError(error.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }

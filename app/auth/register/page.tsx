@@ -15,11 +15,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { UserPlus } from "lucide-react";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { checkAuth } = useAuthStore();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,36 +37,39 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.name,
           email: formData.email,
           password: formData.password,
+          name: formData.name,
         }),
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Registration failed");
-        return;
+        throw new Error(data.error || "Registration failed");
       }
 
+      // Update Zustand store
+      await checkAuth();
+
       router.push("/dashboard");
-    } catch (err) {
-      setError("An error occurred. Please try again.");
-      console.error(err);
+      router.refresh();
+    } catch (error: any) {
+      setError(error.message || "An error occurred during registration");
     } finally {
       setLoading(false);
     }
